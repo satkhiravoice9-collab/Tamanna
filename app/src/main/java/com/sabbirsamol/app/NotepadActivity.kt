@@ -21,13 +21,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class NotepadActivity : ComponentActivity() {
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
     private var isInsideNote = false
 
-    // ================= থিম ম্যানেজারের সাথে কানেকশন =================
     private val themeColors by lazy { ThemeManager.getTheme(this) }
 
     private val bgMain get() = themeColors.bgMain
@@ -84,8 +85,19 @@ class NotepadActivity : ComponentActivity() {
         } catch (e: Exception) { JSONArray() }
     }
 
+    // ================= ফায়ারবেস ক্লাউড স্টোরেজ ইন্টিগ্রেশন =================
     private fun saveNotes(array: JSONArray) {
+        // লোকাল সেভ
         getSharedPreferences("ColorNotepad", Context.MODE_PRIVATE).edit().putString("notes_list", array.toString()).apply()
+        
+        // ক্লাউড সেভ (Firestore)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val db = FirebaseFirestore.getInstance()
+            val notesData = hashMapOf("data" to array.toString())
+            db.collection("users").document(userId).collection("notepad").document("all_notes")
+                .set(notesData)
+        }
     }
 
     private fun showNotesList() {
