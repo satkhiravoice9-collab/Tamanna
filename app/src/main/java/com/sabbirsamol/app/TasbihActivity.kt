@@ -14,6 +14,8 @@ import android.view.Gravity
 import android.widget.*
 import androidx.activity.ComponentActivity
 import org.json.JSONArray
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class TasbihActivity : ComponentActivity() {
 
@@ -91,7 +93,6 @@ class TasbihActivity : ComponentActivity() {
             setPadding(dp(8), dp(8), dp(8), dp(8))
         }
 
-        // আপলোড করা kaaba_img ছবি এখানে রেন্ডার করা হচ্ছে
         kaabaBox.addView(ImageView(this).apply {
             val imgResId = resources.getIdentifier("kaaba_img", "drawable", packageName)
             if (imgResId != 0) {
@@ -201,7 +202,11 @@ class TasbihActivity : ComponentActivity() {
 
     private fun updateDisplay() { countTextView.text = bn(currentCount) }
 
+    // ================= ফায়ারবেস ক্লাউড স্টোরেজ ইন্টিগ্রেশন =================
     private fun saveProgress() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val db = FirebaseFirestore.getInstance()
+
         if (isCustomMode) {
             val prefs = getSharedPreferences("ZikirManager", Context.MODE_PRIVATE)
             val jsonArray = JSONArray(prefs.getString("zikir_list", "[]") ?: "[]")
@@ -209,9 +214,26 @@ class TasbihActivity : ComponentActivity() {
                 val obj = jsonArray.getJSONObject(i)
                 if (obj.getString("id") == customZikirId) { obj.put("read", currentCount); break }
             }
-            prefs.edit().putString("zikir_list", jsonArray.toString()).apply()
+            val finalJsonArray = jsonArray.toString()
+            
+            // লোকাল সেভ
+            prefs.edit().putString("zikir_list", finalJsonArray).apply()
+            
+            // ক্লাউড সেভ (Firestore)
+            if (userId != null) {
+                val zikirData = hashMapOf("data" to finalJsonArray)
+                db.collection("users").document(userId).collection("zikir_manager").document("all_zikirs")
+                    .set(zikirData)
+            }
         } else {
+            // লোকাল সেভ
             getSharedPreferences("TasbihData", Context.MODE_PRIVATE).edit().putInt("main_count", currentCount).apply()
+            
+            // ক্লাউড সেভ (Firestore)
+            if (userId != null) {
+                db.collection("users").document(userId).collection("tasbih").document("main_counter")
+                    .set(mapOf("count" to currentCount))
+            }
         }
     }
 
