@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp"
+    android:background="#F5F5F5">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="সাতক্ষীরার নামাজের সময়সূচি"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"
+        android:textColor="#333333"/>
+
+    <TextView
+        android:id="@+id/txtFajrTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ফজর: লোডিং..."
+        android:textSize="18sp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/txtSunriseTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="সূর্যোদয়: লোডিং..."
+        android:textSize="18sp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/txtZoharTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="যোহর: লোডিং..."
+        android:textSize="18sp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/txtAsrTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="আসর: লোডিং..."
+        android:textSize="18sp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/txtMaghribTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="মাগরিব: লোডিং..."
+        android:textSize="18sp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/txtIshaTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="এশা: লোডিং..."
+        android:textSize="18sp"
+        android:padding="10dp"/>
+
+</LinearLayout>

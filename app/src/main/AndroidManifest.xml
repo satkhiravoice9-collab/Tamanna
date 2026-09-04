@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ইন্টারনেট ও নেটওয়ার্ক চেক করার পারমিশন -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- তাসবিহ কাউন্টারে ভাইব্রেশনের জন্য পারমিশন -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        
+        <!-- মেইন স্ক্রিন (হোমপেজ) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- অ্যাপের বাকি সব পেজের লিস্ট (এগুলো না থাকলে ক্র্যাশ করবে) -->
+        <activity android:name=".TasbihActivity" />
+        <activity android:name=".LibraryActivity" />
+        <activity android:name=".NotepadActivity" />
+        <activity android:name=".ProfileSettingsActivity" />
+        <activity android:name=".ZikirManagerActivity" />
+        <activity android:name=".PdfReaderActivity" />
+        <activity android:name=".MasnunAmolActivity" />
+
+    </application>
+
+</manifest>
