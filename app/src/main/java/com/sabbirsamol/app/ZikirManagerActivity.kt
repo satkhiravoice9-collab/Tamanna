@@ -13,13 +13,14 @@ import androidx.activity.ComponentActivity
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ZikirManagerActivity : ComponentActivity() {
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
     private fun bn(n: Int): String = n.toString().map { "০১২৩৪৫৬৭৮৯"[it - '0'] }.joinToString("")
 
-    // থিম ম্যানেজারের সাথে কানেকশন
     private val themeColors by lazy { ThemeManager.getTheme(this) }
     private val bgMain get() = themeColors.bgMain
     private val cardBg get() = themeColors.cardBg
@@ -47,8 +48,19 @@ class ZikirManagerActivity : ComponentActivity() {
         return JSONArray(prefs.getString("zikir_list", "[]") ?: "[]")
     }
 
+    // ================= ফায়ারবেস ক্লাউড স্টোরেজ ইন্টিগ্রেশন =================
     private fun saveZikirList(array: JSONArray) {
+        // লোকাল সেভ
         getSharedPreferences("ZikirManager", Context.MODE_PRIVATE).edit().putString("zikir_list", array.toString()).apply()
+        
+        // ক্লাউড সেভ (Firestore)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val db = FirebaseFirestore.getInstance()
+            val zikirData = hashMapOf("data" to array.toString())
+            db.collection("users").document(userId).collection("zikir_manager").document("all_zikirs")
+                .set(zikirData)
+        }
     }
 
     private fun showZikirList() {
